@@ -2,7 +2,6 @@ package handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import exceptions.RouteException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -29,12 +28,13 @@ public class Handler implements HttpHandler {
                 response = "Message ONE";
             } else if (m.invoke(routes).equals("Message TWO")) {
                 response = "Message TWO";
-            } else if (m.invoke(routes) == null) {
-                throw new RouteException("NULL");
+            } else if (m.invoke(routes) instanceof String) {
+                response = m.invoke(routes) + " not implemented";
             }
         } catch (InstantiationException | InvocationTargetException | NoSuchMethodException |
-                IllegalAccessException | ClassNotFoundException | RouteException instantiationException) {
-            instantiationException.printStackTrace();
+                IllegalAccessException | ClassNotFoundException | NullPointerException exception) {
+            response = exception.getClass().getName() + " exception";
+            exception.printStackTrace();
         }
         e.sendResponseHeaders(200, response.length());
         OutputStream os = e.getResponseBody();

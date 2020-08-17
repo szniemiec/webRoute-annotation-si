@@ -12,4 +12,14 @@ public class Routes {
     public String test2() {
         return "Message TWO";
     }
+
+    @WebRoute(path = "/lol")
+    public String test3() {
+        return "lfsfd";
+    }
+
+    @WebRoute(path = "/nool")
+    public String test4() {
+        throw new NullPointerException();
+    }
 }
