@@ -2,6 +2,7 @@ package handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import exceptions.RouteException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,30 +20,25 @@ public class Handler implements HttpHandler {
 
     @Override
     public void handle(final HttpExchange e) throws IOException {
-        String response = "This is the response";
-        e.sendResponseHeaders(200, response.length());
-        OutputStream os = e.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
+        String response = "";
         try {
             Class<?> routesClass = Class.forName("Routes");
             Object routes = routesClass.getDeclaredConstructor().newInstance();
             Method m = map.get(e.getRequestURI().toString());
             if (m.invoke(routes).equals("Message ONE")) {
-                System.out.println("home message one");
+                response = "Message ONE";
             } else if (m.invoke(routes).equals("Message TWO")) {
-                System.out.println("users message two");
-            } else {
-                System.out.println("other");
+                response = "Message TWO";
+            } else if (m.invoke(routes) == null) {
+                throw new RouteException("NULL");
             }
-        } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException |
-                InstantiationException | InvocationTargetException classNotFoundException) {
-            classNotFoundException.printStackTrace();
+        } catch (InstantiationException | InvocationTargetException | NoSuchMethodException |
+                IllegalAccessException | ClassNotFoundException | RouteException instantiationException) {
+            instantiationException.printStackTrace();
         }
+        e.sendResponseHeaders(200, response.length());
+        OutputStream os = e.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
     }
 }
-
-// 2
-// z exchange wyciągnąć ścieżkę, na którą poszły zapytania
-// odniosę się do mapy z konstruktora (map.get(ścieżka) i dostaję metodę obsługującą zapytanie)
-// wywołać metodę i zwrócić to co metoda zwraca do użytkownika

@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="webRoute-annotation" />
+        <module name="webRoute-annotation-si" />
       </profile>
     </annotationProcessing>
   </component>
