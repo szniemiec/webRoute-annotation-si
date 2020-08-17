@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.Map;
 
 public class Handler implements HttpHandler {
@@ -29,7 +30,7 @@ public class Handler implements HttpHandler {
             } else if (m.invoke(routes).equals("Message TWO")) {
                 response = "Message TWO";
             } else if (m.invoke(routes) instanceof String) {
-                response = m.invoke(routes) + " not implemented";
+                response = e.getRequestURI().toString();
             }
         } catch (InstantiationException | InvocationTargetException | NoSuchMethodException |
                 IllegalAccessException | ClassNotFoundException | NullPointerException exception) {
