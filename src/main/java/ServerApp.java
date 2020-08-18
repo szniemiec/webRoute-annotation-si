@@ -14,16 +14,9 @@ public class ServerApp {
 
     public void registerRoutes(Class<?>... classes) {
         map = new HashMap<>();
-        Arrays.stream(classes).forEach(c -> {
-            Method[] methods = c.getMethods();
-            for (Method m : methods) {
-                if (m.isAnnotationPresent(WebRoute.class)) {
-                    WebRoute webRoute = m.getAnnotation(WebRoute.class);
-                    String path = webRoute.path();
-                    map.put(path, m);
-                }
-            }
-        });
+        Arrays.stream(classes).flatMap(c -> Arrays.stream(c.getMethods()))
+                .filter(method -> method.isAnnotationPresent(WebRoute.class))
+                .forEach(method -> map.put(method.getAnnotation(WebRoute.class).path(), method));
     }
 
     public void run() throws Exception {

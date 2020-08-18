@@ -24,14 +24,10 @@ public class Handler implements HttpHandler {
             Class<?> routesClass = Class.forName("Routes");
             Object routes = routesClass.getDeclaredConstructor().newInstance();
             Method m = map.get(e.getRequestURI().toString());
-            if (m.invoke(routes) == null) {
-                response = "null";
-            } else if (m.invoke(routes).equals("Message ONE")) {
-                response = "Message ONE";
-            } else if (m.invoke(routes).equals("Message TWO")) {
-                response = "Message TWO";
-            } else if (m.invoke(routes) instanceof String) {
-                response = e.getRequestURI().toString();
+            if (m == null) {
+                response = "404 not found";
+            } else {
+                response = getResponseForMethod(routes, m);
             }
         } catch (InstantiationException | InvocationTargetException | NoSuchMethodException |
                 IllegalAccessException | ClassNotFoundException | NullPointerException exception) {
@@ -43,4 +39,16 @@ public class Handler implements HttpHandler {
         os.write(response.getBytes());
         os.close();
     }
+
+    private String getResponseForMethod(Object routes, Method m) throws IllegalAccessException, InvocationTargetException {
+        String response;
+        Object returnedValue = m.invoke(routes);
+        if (returnedValue == null) {
+            response = "No returned value";
+        } else {
+            response = returnedValue.toString();
+        }
+        return response;
+    }
+
 }
