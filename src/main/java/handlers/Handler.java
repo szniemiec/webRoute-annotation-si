@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.util.Map;
 
 public class Handler implements HttpHandler {
@@ -25,7 +24,9 @@ public class Handler implements HttpHandler {
             Class<?> routesClass = Class.forName("Routes");
             Object routes = routesClass.getDeclaredConstructor().newInstance();
             Method m = map.get(e.getRequestURI().toString());
-            if (m.invoke(routes).equals("Message ONE")) {
+            if (m.invoke(routes) == null) {
+                response = "null";
+            } else if (m.invoke(routes).equals("Message ONE")) {
                 response = "Message ONE";
             } else if (m.invoke(routes).equals("Message TWO")) {
                 response = "Message TWO";

@@ -13,13 +13,18 @@ public class Routes {
         return "Message TWO";
     }
 
-    @WebRoute(path = "/lol")
+    @WebRoute(path = "/test")
     public String test3() {
-        return "lfsfd";
+        return "abcd";
     }
 
-    @WebRoute(path = "/nool")
+    @WebRoute(path = "/null")
     public String test4() {
-        throw new NullPointerException();
+        return null;
+    }
+
+    @WebRoute(path = "/void")
+    public void test5() {
+
     }
 }
